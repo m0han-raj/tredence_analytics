@@ -1,4 +1,4 @@
-# Self-Pruning Neural Network on CIFAR-10
+# Report on Self-Pruning Neural Network on CIFAR-10
 
 ## Overview
 

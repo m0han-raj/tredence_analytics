@@ -79,6 +79,8 @@ Sparsity level is the percentage of gates with value below `1e-2`.
 | 1e-3       | 49.27%        | 99.84%         |
 | 1e-2       | 37.90%        | 99.99%         |
 
+![Distribution of the final Gate](gate_distribution.png) 
+
 ### Interpretation
 
 - **λ = 1e-4 is the best trade-off.** The network prunes 96% of its weights

@@ -1,4 +1,6 @@
-# Report on Self-Pruning Neural Network on CIFAR-10
+# Self-Pruning Neural Network on CIFAR-10
+
+A PyTorch feed-forward network that learns to prune itself during training: every weight has a learnable gate, and an L1 penalty drives unneeded gates to zero.
 
 ## Overview
 
@@ -79,7 +81,7 @@ Sparsity level is the percentage of gates with value below `1e-2`.
 | 1e-3       | 49.27%        | 99.84%         |
 | 1e-2       | 37.90%        | 99.99%         |
 
-![Distribution of the final Gate](gate_distribution.png) 
+![Distribution of the final Gate](assets/gate_distribution.png) 
 
 ### Interpretation
 
@@ -106,8 +108,52 @@ faster.
 
 ## Gate value distribution
 
-See `gate_distribution.png`, generated for the best model (λ = 1e-4). The
+See `assets/gate_distribution.png`, generated for the best model (λ = 1e-4). The
 y-axis is on log scale because the spike at 0 dwarfs everything else. The
 bimodal shape is clearly visible: a tall spike at `g ≈ 0` containing about
 96% of gates, and a smaller cluster of surviving gates spread across higher
 values.
+
+## Project structure
+
+```
+.
+├── src/
+│   ├── data.py            # CIFAR-10 loaders
+│   ├── prunable_layer.py  # PrunableLinear (weight * sigmoid(gate_score))
+│   ├── network.py         # 3072 -> 512 -> 256 -> 10 network
+│   ├── sparser.py         # sparsity loss and sparsity metrics
+│   └── train.py           # lambda sweep, evaluation, gate histogram
+├── assets/
+│   └── gate_distribution.png
+├── requirements.txt
+├── LICENSE
+└── README.md
+```
+
+## Setup
+
+```bash
+git clone https://github.com/m0han-raj/tredence_analytics.git
+cd tredence_analytics
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scriptsctivate
+pip install -r requirements.txt
+```
+
+## Usage
+
+Run from the repository root (CIFAR-10 is downloaded to `./data` on first run):
+
+```bash
+python src/train.py
+```
+
+This trains the network for each lambda in `1e-4, 1e-3, 1e-2`, prints a results table, and saves the gate histogram to `assets/gate_distribution.png`.
+
+## Tech stack
+
+Python, PyTorch, torchvision, matplotlib.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
